@@ -1,5 +1,8 @@
 import React, {useEffect} from 'react';
 import {View, Text, Button, StyleSheet, FlatList} from 'react-native';
+import notifee from '@notifee/react-native';
+import {Searchbar} from 'react-native-paper';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {
   Container,
@@ -39,8 +42,38 @@ const Messages = [
 ];
 
 const MessagesScreen = ({navigation}) => {
+  // const onChangeSearch = searchQuery => {
+  //   if (searchQuery) {
+  //     const formatedData = searchQuery.toLowerCase();
+  //     const filterData = filter(data, creative => {
+  //       return contains(creative, formatedData);
+  //     });
+  //     setData(filterData);
+  //   } else {
+  //     setData(data);
+  //   }
+  // };
+
+  // const contains = ({creativeHeading, creativeDescription}, searchQuery) => {
+  //   if (
+  //     creativeHeading.toLowerCase().includes(searchQuery) ||
+  //     creativeDescription.toLowerCase().includes(searchQuery)
+  //   ) {
+  //     return true;
+  //   }
+  //   return false;
+  // };
+
   return (
     <Container>
+      <View style={styles.searchBarContainer}>
+        <Searchbar
+          placeholder="Search"
+          onChangeText={searchQuery => onChangeSearch(searchQuery)}
+          autoCapitalize="none"
+          style={styles.searchBar}
+        />
+      </View>
       <FlatList
         data={Messages}
         keyExtractor={item => item.id}
@@ -75,5 +108,18 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  searchBarContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    alignItems: 'center',
+    padding: 0,
+    margin: 0,
+  },
+  searchBar: {
+    flex: 1,
+    marginVertical: 10,
+    height: 45,
+    fontSize: 18,
   },
 });
