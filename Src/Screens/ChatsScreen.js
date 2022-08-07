@@ -2,9 +2,33 @@ import {View, Text, StyleSheet} from 'react-native';
 import React, {useState, useCallback, useEffect} from 'react';
 import {Bubble, GiftedChat, Send} from 'react-native-gifted-chat';
 import {LocalNotification} from '../Services/LocalPushController';
+import notifee, {EventType} from '@notifee/react-native';
+import {AndroidColor} from '@notifee/react-native';
 
 export default function ChatsScreen() {
   const [messages, setMessages] = useState([]);
+
+  async function onDisplayNotification() {
+    await notifee.requestPermission();
+
+    const channelId = await notifee.createChannel({
+      id: 'default',
+      name: 'Default Channel',
+    });
+
+    await notifee.displayNotification({
+      title: 'Notification Title',
+      body: 'Main body content of the notification',
+      android: {
+        channelId,
+        smallIcon: 'name-of-a-small-icon', // optional, defaults to 'ic_launcher'.
+        // pressAction is needed if you want the notification to open the app when pressed
+        pressAction: {
+          id: 'default',
+        },
+      },
+    });
+  }
 
   useEffect(() => {
     setMessages([
@@ -35,7 +59,7 @@ export default function ChatsScreen() {
     setMessages(previousMessages =>
       GiftedChat.append(previousMessages, messages),
     );
-    // LocalNotification();
+    onDisplayNotification();
   }, []);
 
   const renderBubble = props => {
@@ -55,9 +79,6 @@ export default function ChatsScreen() {
     <GiftedChat
       messages={messages}
       onSend={messages => onSend(messages)}
-      onPressAvatar={() => {
-        // handleNotification(messages);
-      }}
       user={{
         _id: 1,
       }}
